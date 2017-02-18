@@ -1,5 +1,5 @@
 {
-  "name": "mfcauto-utils",
+  "name": "mfcauto-plugins",
   "version": "0.1.0",
   "description": "A collection of utility classes that work with MFCAuto",
   "main": "lib/index.js",

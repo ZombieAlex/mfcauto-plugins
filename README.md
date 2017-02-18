@@ -22,7 +22,7 @@ This code will continually monitor print the state of all active countdowns acro
 let mfc = require("MFCAuto");
 let client = new mfc.Client();
 
-let Countdown = require("mfcauto-utils").Countdown;
+let Countdown = require("mfcauto-plugins").Countdown;
 let cd = new Countdown();
 
 cd.on("countdownDetected", (model, tokensRemaining, topic) => {

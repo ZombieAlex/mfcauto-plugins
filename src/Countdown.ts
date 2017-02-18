@@ -52,7 +52,7 @@ export class Countdown implements NodeJS.EventEmitter {
 
     private topicHandler(model: Model, before: string, after: string): void {
         let numberRe = /\d+/g;
-        let cleanAfter = after.replace(/\[none\]/g, "0");
+        let cleanAfter = (after || "").replace(/\[none\]/g, "0");
 
         // Convert "[none]" (which MFC's auto-countdown code sometimes inserts to
         // indicate a countdown is completed) to 0 and then create an array of all

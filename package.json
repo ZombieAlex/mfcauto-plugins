@@ -1,10 +1,12 @@
 {
   "name": "mfcauto-plugins",
-  "version": "0.1.1",
+  "version": "0.3.0",
   "description": "A collection of utility classes that work with MFCAuto",
   "main": "lib/index.js",
   "typings": "lib/index",
-  "dependencies": {},
+  "dependencies": {
+    "MFCAuto": "file:../MFCAuto"
+  },
   "peerDependencies": {
     "MFCAuto": "github:zombiealex/MFCAuto"
   },

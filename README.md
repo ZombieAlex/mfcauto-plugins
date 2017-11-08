@@ -40,3 +40,20 @@ cd.on("countdownCompleted", (model, topicBefore, topicAfter) => {
 
 client.connect();
 ```
+
+### Trending
+Monitors room counts and detects when any model gains X viewers in Y milliseconds, where X and Y are configurable via constructor parameters. MFC's own trending page tracks tending over 1 minute and over 5 minutes. You can accomplish the same thing with two Trending instances.
+```javascript
+let mfc = require("MFCAuto");
+let client = new mfc.Client();
+
+let Trending = require("mfcauto-plugins").Trending;
+let trending = new Trending(50, 60 * 1000);
+
+trending.on("trendingModel", (model, delta) => {
+    // delta will be >= 50, the threshold specified in the constructor
+    console.log(`${model.nm} has gained ${delta} viewers over the last 60 seconds`);
+});
+
+client.connect();
+```

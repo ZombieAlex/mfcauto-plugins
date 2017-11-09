@@ -11,6 +11,7 @@ import {Model, STATE, applyMixins} from "MFCAuto";
 export class Trending implements NodeJS.EventEmitter {
     private modelToRoomCounts: Map<number, number>;
     private trendingThreshold: number;
+    private intervalTimer: number;
 
     // Instance EventEmitter methods
     public addListener: (event: string, listener: Function) => this;
@@ -30,7 +31,11 @@ export class Trending implements NodeJS.EventEmitter {
     constructor(trendingThreshold = 60, checkInterval = 60 * 1000) {
         this.trendingThreshold = trendingThreshold;
         this.modelToRoomCounts = new Map();
-        setInterval(this.modelUpdateCallback.bind(this), checkInterval);
+        this.intervalTimer = setInterval(this.modelUpdateCallback.bind(this), checkInterval);
+    }
+
+    public shutdown() {
+        clearInterval(this.intervalTimer);
     }
 
     private modelUpdateCallback() {

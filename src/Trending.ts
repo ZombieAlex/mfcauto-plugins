@@ -10,7 +10,7 @@ import {Model, STATE, applyMixins} from "MFCAuto";
 
 export class Trending implements NodeJS.EventEmitter {
     private modelToRoomCounts: Map<number, number>;
-    private trendingThreshold: number;
+    public trendingThreshold: number;
     private intervalTimer: number;
 
     // Instance EventEmitter methods
@@ -36,27 +36,25 @@ export class Trending implements NodeJS.EventEmitter {
 
     public shutdown() {
         clearInterval(this.intervalTimer);
+        this.modelToRoomCounts.clear();
     }
 
     private modelUpdateCallback() {
-        Model.findModels((m) => m.bestSession.vs !== STATE.Offline
-        && typeof m.bestSession.rc === "number").forEach((m) => {
-            let currentCount = m.bestSession.rc as number;
-            if (this.modelToRoomCounts.has(m.uid)) {
-                let previousCount = this.modelToRoomCounts.get(m.uid);
-                let delta = currentCount - previousCount;
-                if (delta >= this.trendingThreshold) {
-                    this.emit("trendingModel", m, delta);
+        Model.findModels((m) => true).forEach((m) => {
+            if (m.bestSession.vs === STATE.Offline) {
+                this.modelToRoomCounts.delete(m.uid);
+            } else if (typeof m.bestSession.rc === "number") {
+                let currentCount = m.bestSession.rc as number;
+                if (this.modelToRoomCounts.has(m.uid)) {
+                    let previousCount = this.modelToRoomCounts.get(m.uid);
+                    let delta = currentCount - previousCount;
+                    if (delta >= this.trendingThreshold) {
+                        this.emit("trendingModel", m, delta);
+                    }
                 }
+                this.modelToRoomCounts.set(m.uid, currentCount);
             }
-            this.modelToRoomCounts.set(m.uid, currentCount);
         });
-    }
-
-    private vsHandler(model: Model, before: STATE, after: STATE) {
-        if (after === STATE.Offline) {
-            this.modelToRoomCounts.delete(model.uid);
-        }
     }
 }
 

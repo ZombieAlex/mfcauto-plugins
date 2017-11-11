@@ -1,7 +1,7 @@
 /// <reference types="node" />
 export declare class Trending implements NodeJS.EventEmitter {
     private modelToRoomCounts;
-    private trendingThreshold;
+    trendingThreshold: number;
     private intervalTimer;
     addListener: (event: string, listener: Function) => this;
     on: (event: string, listener: Function) => this;
@@ -19,5 +19,4 @@ export declare class Trending implements NodeJS.EventEmitter {
     constructor(trendingThreshold?: number, checkInterval?: number);
     shutdown(): void;
     private modelUpdateCallback();
-    private vsHandler(model, before, after);
 }

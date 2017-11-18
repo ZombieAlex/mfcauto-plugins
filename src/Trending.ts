@@ -46,7 +46,7 @@ export class Trending implements NodeJS.EventEmitter {
             } else if (typeof m.bestSession.rc === "number") {
                 let currentCount = m.bestSession.rc as number;
                 if (this.modelToRoomCounts.has(m.uid)) {
-                    let previousCount = this.modelToRoomCounts.get(m.uid);
+                    let previousCount = this.modelToRoomCounts.get(m.uid) as number;
                     let delta = currentCount - previousCount;
                     if (delta >= this.trendingThreshold) {
                         this.emit("trendingModel", m, delta);

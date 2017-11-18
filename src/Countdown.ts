@@ -66,74 +66,76 @@ export class Countdown implements NodeJS.EventEmitter {
         }
         let tracker = this.modelToTracker.get(model.uid);
 
-        if (before === undefined || after === undefined) {
-            // Model's don't set their own topics to undefined, so don't
-            // treat either coming from or going to undefined as reaching
-            // a goal.
-            if (tracker.hasCountdown) {
-                this.emit("countdownAbandoned", model, before, after);
-            }
-            this.resetTracker(tracker, newNumbers);
-        } else {
-            // If the new topic has numbers and the same number of numbers
-            // as the old topic, then we can proceed to update our decrementMap
-            let oldNumbers = tracker.numbers;
-            if (newNumbers.length === oldNumbers.length && newNumbers.length > 0) {
-                for (let i = 0; i < newNumbers.length; i++) {
-                    if (oldNumbers[i] > newNumbers[i]) {
-                        tracker.decrementMap[i]++;
-                        if (tracker.decrementMap[i] >= this.minimumDecrements) {
-                            if (tracker.hasCountdown) {
-                                if (tracker.index !== i) {
-                                    // Two different numbers in the model's topic have been
-                                    // decremented more than minimumDecrements times, no longer
-                                    // sure what's what...
-                                    this.emit("countdownAbandoned", model, before, after);
-                                    this.resetTracker(tracker, newNumbers);
+        if (tracker !== undefined) {
+            if (before === undefined || after === undefined) {
+                // Model's don't set their own topics to undefined, so don't
+                // treat either coming from or going to undefined as reaching
+                // a goal.
+                if (tracker.hasCountdown) {
+                    this.emit("countdownAbandoned", model, before, after);
+                }
+                this.resetTracker(tracker, newNumbers);
+            } else {
+                // If the new topic has numbers and the same number of numbers
+                // as the old topic, then we can proceed to update our decrementMap
+                let oldNumbers = tracker.numbers;
+                if (newNumbers.length === oldNumbers.length && newNumbers.length > 0) {
+                    for (let i = 0; i < newNumbers.length; i++) {
+                        if (oldNumbers[i] > newNumbers[i]) {
+                            tracker.decrementMap[i]++;
+                            if (tracker.decrementMap[i] >= this.minimumDecrements) {
+                                if (tracker.hasCountdown) {
+                                    if (tracker.index !== i) {
+                                        // Two different numbers in the model's topic have been
+                                        // decremented more than minimumDecrements times, no longer
+                                        // sure what's what...
+                                        this.emit("countdownAbandoned", model, before, after);
+                                        this.resetTracker(tracker, newNumbers);
+                                    } else {
+                                        if (newNumbers[i] === 0) {
+                                            this.emit("countdownCompleted", model, before, after);
+                                            this.resetTracker(tracker, newNumbers);
+                                        } else {
+                                            this.emit("countdownUpdated", model, newNumbers[i], after);
+                                        }
+                                    }
                                 } else {
+                                    tracker.hasCountdown = true;
+                                    tracker.index = i;
+                                    this.emit("countdownDetected", model, newNumbers[i], after);
+
                                     if (newNumbers[i] === 0) {
                                         this.emit("countdownCompleted", model, before, after);
                                         this.resetTracker(tracker, newNumbers);
-                                    } else {
-                                        this.emit("countdownUpdated", model, newNumbers[i], after);
                                     }
-                                }
-                            } else {
-                                tracker.hasCountdown = true;
-                                tracker.index = i;
-                                this.emit("countdownDetected", model, newNumbers[i], after);
-
-                                if (newNumbers[i] === 0) {
-                                    this.emit("countdownCompleted", model, before, after);
-                                    this.resetTracker(tracker, newNumbers);
                                 }
                             }
                         }
                     }
-                }
-                tracker.numbers = newNumbers;
-            } else {
-                // The model changed the number of numbers in her topic
-                if (tracker.hasCountdown) {
-                    // If we thought there was a countdown going prior to this topic change,
-                    // and the amount of the countdown is still in the model's topic somewhere,
-                    // then just update our countdown index and decrementMap
-                    let newIndex = newNumbers.indexOf(oldNumbers[tracker.index]);
-                    if (newIndex !== -1 && newNumbers.lastIndexOf(oldNumbers[tracker.index]) === newIndex) {
-                        let previousDecrementCount = tracker.decrementMap[tracker.index];
-                        tracker.decrementMap = newNumbers.map(() => 0);
-                        tracker.decrementMap[newIndex] = previousDecrementCount;
-                        tracker.index = newIndex;
-                        tracker.numbers = newNumbers;
+                    tracker.numbers = newNumbers;
+                } else {
+                    // The model changed the number of numbers in her topic
+                    if (tracker.hasCountdown) {
+                        // If we thought there was a countdown going prior to this topic change,
+                        // and the amount of the countdown is still in the model's topic somewhere,
+                        // then just update our countdown index and decrementMap
+                        let newIndex = newNumbers.indexOf(oldNumbers[tracker.index]);
+                        if (newIndex !== -1 && newNumbers.lastIndexOf(oldNumbers[tracker.index]) === newIndex) {
+                            let previousDecrementCount = tracker.decrementMap[tracker.index];
+                            tracker.decrementMap = newNumbers.map(() => 0);
+                            tracker.decrementMap[newIndex] = previousDecrementCount;
+                            tracker.index = newIndex;
+                            tracker.numbers = newNumbers;
+                        } else {
+                            // Otherwise, we're not really sure if a countdown was completed
+                            // but maybe?  Err on the safe side and fire the countdownCompleted
+                            // event.  Better to have a few false positives than miss a countdown.
+                            this.emit("countdownCompleted", model, before, after);
+                            this.resetTracker(tracker, newNumbers);
+                        }
                     } else {
-                        // Otherwise, we're not really sure if a countdown was completed
-                        // but maybe?  Err on the safe side and fire the countdownCompleted
-                        // event.  Better to have a few false positives than miss a countdown.
-                        this.emit("countdownCompleted", model, before, after);
                         this.resetTracker(tracker, newNumbers);
                     }
-                } else {
-                    this.resetTracker(tracker, newNumbers);
                 }
             }
         }

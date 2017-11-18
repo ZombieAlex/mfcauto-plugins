@@ -1,19 +1,16 @@
 {
   "name": "mfcauto-plugins",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "A collection of utility classes that work with MFCAuto",
   "main": "lib/index.js",
   "typings": "lib/index",
-  "dependencies": {
-    "MFCAuto": "file:../MFCAuto"
-  },
   "peerDependencies": {
-    "MFCAuto": "github:zombiealex/MFCAuto"
+    "MFCAuto": "github:ZombieAlex/MFCAuto"
   },
   "devDependencies": {
-    "@types/es6-shim": "^0.31.32",
     "@types/node": "^7.0.5",
-    "typescript": "^2.1.6"
+    "MFCAuto": "github:ZombieAlex/MFCAuto",
+    "typescript": "^2.6.1"
   },
   "repository": {
     "type": "git",

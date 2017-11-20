@@ -47,13 +47,25 @@ export class Trending2 {
         Model.on("rc", this.rcHandler.bind(this));
     }
 
+    // Clears all registered callbacks and optionally alters the
+    // maximum kept room count history. The latter applies going
+    // forward only. Older history is already lost.
     public reset(maxHistoryMilliseconds: number = this.maxHistoryMilliseconds) {
         this.maxHistoryMilliseconds = maxHistoryMilliseconds;
         this.trendingCallbacks.clear();
+    }
+
+    // Resets this instance, kills all outstanding timers,
+    // and clears historical room counts. This is useful
+    // for when the consumer is shutting down and wants
+    // the NodeJS event loop to die immediately.
+    public shutdown() {
+        this.reset();
         this.offlineTimerMap.forEach((timer, uid) => {
             clearTimeout(timer);
         });
         this.offlineTimerMap.clear();
+        this.modelToCountHistories.clear();
     }
 
     public onTrendingThresholds(milliseconds: number, viewerCount: number, callback: Trending2Callback): void {

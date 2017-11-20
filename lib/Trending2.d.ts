@@ -7,6 +7,7 @@ export declare class Trending2 {
     private modelToCountHistories;
     constructor(maxHistoryMilliseconds?: number);
     reset(maxHistoryMilliseconds?: number): void;
+    shutdown(): void;
     onTrendingThresholds(milliseconds: number, viewerCount: number, callback: Trending2Callback): void;
     private vsHandler(model, before, after);
     private rcHandler(model, before, after);

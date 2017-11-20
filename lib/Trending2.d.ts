@@ -11,7 +11,7 @@ export declare class Trending2 {
     onTrendingThresholds(milliseconds: number, viewerCount: number, callback: Trending2Callback): void;
     private vsHandler(model, before, after);
     private rcHandler(model, before, after);
-    private getRoomCountAt(model, millisecondsAgo);
+    getRoomCountAt(model: Model, millisecondsAgo: number): number | undefined;
     private checkModelTrending(model);
     private checkAllModels();
 }

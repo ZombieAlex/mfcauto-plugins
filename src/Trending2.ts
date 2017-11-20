@@ -117,7 +117,7 @@ export class Trending2 {
         }
     }
 
-    private getRoomCountAt(model: Model, millisecondsAgo: number/*, maxWiggle: number = 5 * 60 * 1000*/): number | undefined {
+    public getRoomCountAt(model: Model, millisecondsAgo: number/*, maxWiggle: number = 5 * 60 * 1000*/): number | undefined {
         let now = Date.now();
         let history = this.modelToCountHistories.get(model.uid);
         if (Array.isArray(history) && history.length > 0) {

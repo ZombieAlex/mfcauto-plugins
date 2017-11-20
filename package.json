@@ -1,6 +1,6 @@
 {
   "name": "mfcauto-plugins",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "A collection of utility classes that work with MFCAuto",
   "main": "lib/index.js",
   "typings": "lib/index",

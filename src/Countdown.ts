@@ -17,7 +17,7 @@ topic changes.
 */
 
 import {EventEmitter} from "events";
-import {Model, applyMixins} from "MFCAuto";
+import {Model} from "MFCAuto";
 
 interface TopicTracker {
     hasCountdown: boolean;
@@ -26,26 +26,12 @@ interface TopicTracker {
     index: number;
 }
 
-export class Countdown implements NodeJS.EventEmitter {
+export class Countdown extends NodeJS.EventEmitter {
     private minimumDecrements = 2;
     private modelToTracker: Map<number, TopicTracker>;
 
-    // Instance EventEmitter methods
-    public addListener: (event: string, listener: Function) => this;
-    public on: (event: string, listener: Function) => this;
-    public once: (event: string, listener: Function) => this;
-    public prependListener: (event: string, listener: Function) => this;
-    public prependOnceListener: (event: string, listener: Function) => this;
-    public removeListener: (event: string, listener: Function) => this;
-    public removeAllListeners: (event?: string) => this;
-    public getMaxListeners: () => number;
-    public setMaxListeners: (n: number) => this;
-    public listeners: (event: string) => Function[];
-    public emit: (event: string, ...args: any[]) => boolean;
-    public eventNames: () => string[];
-    public listenerCount: (type: string) => number;
-
     constructor() {
+        super();
         this.modelToTracker = new Map() as Map<number, TopicTracker>;
         Model.on("topic", this.topicHandler.bind(this));
     }
@@ -148,4 +134,4 @@ export class Countdown implements NodeJS.EventEmitter {
         tracker.decrementMap = newNumbers.map(() => 0);
     }
 }
-applyMixins(Countdown, [EventEmitter]);
+

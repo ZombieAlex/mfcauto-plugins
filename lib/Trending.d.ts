@@ -1,5 +1,6 @@
 /// <reference types="node" />
-export declare class Trending extends NodeJS.EventEmitter {
+import { EventEmitter } from "events";
+export declare class Trending extends EventEmitter {
     private modelToRoomCounts;
     trendingThreshold: number;
     private intervalTimer;

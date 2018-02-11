@@ -1,5 +1,6 @@
 /// <reference types="node" />
-export declare class Countdown extends NodeJS.EventEmitter {
+import { EventEmitter } from "events";
+export declare class Countdown extends EventEmitter {
     private minimumDecrements;
     private modelToTracker;
     constructor();

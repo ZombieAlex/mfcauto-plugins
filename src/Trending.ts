@@ -8,7 +8,7 @@ gained in the duration.
 import {EventEmitter} from "events";
 import {Model, STATE} from "MFCAuto";
 
-export class Trending extends NodeJS.EventEmitter {
+export class Trending extends EventEmitter {
     private modelToRoomCounts: Map<number, number>;
     public trendingThreshold: number;
     private intervalTimer: number;

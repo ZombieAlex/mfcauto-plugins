@@ -26,7 +26,7 @@ interface TopicTracker {
     index: number;
 }
 
-export class Countdown extends NodeJS.EventEmitter {
+export class Countdown extends EventEmitter {
     private minimumDecrements = 2;
     private modelToTracker: Map<number, TopicTracker>;
 

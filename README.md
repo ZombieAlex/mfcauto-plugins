@@ -4,9 +4,11 @@ A collection of utility classes that work with [MFCAuto](https://github.com/Zomb
 Useful contributions are very welcome.  How are you using MFCAuto?
 
 ## Setup
+**This package requires MFCAuto, which is no longer available on GitHub, as a peer dependency.**
+
 ```bash
-# Install MFCAuto
-$ npm install ZombieAlex/MFCAuto --save
+# Install MFCAuto from wherever you have it or can find it
+$ npm install MFCAuto --save
 
 # Install mfcauto-plugins
 $ npm install ZombieAlex/mfcauto-plugins --save

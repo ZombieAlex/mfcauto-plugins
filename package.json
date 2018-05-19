@@ -4,6 +4,9 @@
   "description": "A collection of utility classes that work with MFCAuto",
   "main": "lib/index.js",
   "typings": "lib/index",
+  "peerDependencies": {
+    "MFCAuto": "^5.2.0"
+  },
   "devDependencies": {
     "@types/node": "^10.1.2",
     "typescript": "^2.8.3"
